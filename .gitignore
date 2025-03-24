@@ -37,7 +37,7 @@ env/
 
 # Docker files
 docker-compose.override.yml
-docker-compose.yml
+
 
 # OS generated files
 .DS_Store
