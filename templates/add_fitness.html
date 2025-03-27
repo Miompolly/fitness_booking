@@ -1,0 +1,35 @@
+{% extends "base_generic.html" %} {% block content %}
+<h2>Add Fitness Program</h2>
+
+<form method="POST">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="id_name" class="form-label">Program Name</label>
+    {{ form.name }}
+  </div>
+
+  <div class="mb-3">
+    <label for="id_trainer" class="form-label">Trainer</label>
+    {{ form.trainer }}
+  </div>
+
+  <div class="mb-3">
+    <label for="id_description" class="form-label">Description</label>
+    {{ form.description }}
+  </div>
+
+  <div class="mb-3">
+    <label for="id_duration_weeks" class="form-label"
+      >Duration (in weeks)</label
+    >
+    {{ form.duration_weeks }}
+  </div>
+
+  <div class="mb-3">
+    <label for="id_difficulty_level" class="form-label">Difficulty Level</label>
+    {{ form.difficulty_level }}
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save Fitness Program</button>
+</form>
+{% endblock %}

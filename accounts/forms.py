@@ -2,6 +2,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser  # Import CustomUser model
 
+
+from django import forms
+from .models import Trainer
+
 # Custom User Creation Form
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -25,3 +29,31 @@ class CustomUserLoginForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({'class': 'form-control'})
         self.fields['password'].widget.attrs.update({'class': 'form-control'})
+
+
+
+# forms.py
+
+
+class TrainerForm(forms.ModelForm):
+    class Meta:
+        model = Trainer
+        fields = ['name', 'experience', 'specialty', 'bio']
+
+
+from django import forms
+from .models import Fitness
+
+class FitnessForm(forms.ModelForm):
+    class Meta:
+        model = Fitness
+        fields = ['name', 'trainer', 'description', 'duration_weeks', 'difficulty_level']
+        widgets = {
+            'trainer': forms.Select(attrs={'class': 'form-select'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'duration_weeks': forms.NumberInput(attrs={'class': 'form-control'}),
+            'difficulty_level': forms.Select(attrs={'class': 'form-select'})
+        }
+
+

@@ -1,0 +1,15 @@
+{% extends 'base_generic.html' %} {% block content %}
+<h2>List of Trainers</h2>
+<div class="list-group">
+  {% for trainer in trainers %}
+  <a href="#" class="list-group-item list-group-item-action">
+    <h5 class="mb-1">{{ trainer.name }}</h5>
+    <p class="mb-1">Experience: {{ trainer.experience }} years</p>
+    <p class="mb-1">Specialty: {{ trainer.specialty }}</p>
+    <small>{{ trainer.bio|slice:":100" }}...</small>
+  </a>
+  {% empty %}
+  <p>No trainers found.</p>
+  {% endfor %}
+</div>
+{% endblock %}

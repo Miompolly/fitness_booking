@@ -342,147 +342,15 @@
         <a href="{% url 'logout' %}">Logout</a>
       </div>
     </nav>
+    <!-- Start block -->
+    <h1>Fitness Programs</h1>
 
-    <!-- Main Dashboard Container -->
-    <main class="dashboard-container">
-      <h1>Dashboard</h1>
-
-      <!-- Filters Section -->
-      <section id="schedule" class="schedule-section">
-        <h2>Class Schedule</h2>
-        <div class="filters">
-          <input type="date" id="dateFilter" />
-          <select id="classFilter">
-            <option value="">All Classes</option>
-            <option value="yoga">Yoga</option>
-            <option value="hiit">HIIT</option>
-            <option value="pilates">Pilates</option>
-          </select>
-          <select id="trainerFilter">
-            <option value="">All Trainers</option>
-            <option value="john">John Smith</option>
-            <option value="sarah">Sarah Johnson</option>
-          </select>
-        </div>
-
-        <!-- Class Cards Grid -->
-        <div class="schedule-grid" id="scheduleGrid">
-          <!-- Yoga Card -->
-          <div class="class-card yoga">
-            <div class="class-image yoga"></div>
-            <div class="class-info">
-              <h3>Yoga Flow</h3>
-              <p class="trainer">Instructor: Sarah Johnson</p>
-              <p class="time"><i class="far fa-clock"></i> 60 minutes</p>
-              <p class="schedule">
-                <i class="far fa-calendar"></i> Mon, Wed, Fri
-              </p>
-              <button class="book-btn">Book Now</button>
-            </div>
-          </div>
-
-          <!-- HIIT Card -->
-          <div class="class-card hiit">
-            <div class="class-image hiit"></div>
-            <div class="class-info">
-              <h3>HIIT Training</h3>
-              <p class="trainer">Instructor: John Smith</p>
-              <p class="time"><i class="far fa-clock"></i> 45 minutes</p>
-              <p class="schedule"><i class="far fa-calendar"></i> Tue, Thu</p>
-              <button class="book-btn">Book Now</button>
-            </div>
-          </div>
-
-          <!-- Pilates Card -->
-          <div class="class-card pilates">
-            <div class="class-image pilates"></div>
-            <div class="class-info">
-              <h3>Pilates Core</h3>
-              <p class="trainer">Instructor: Emma Davis</p>
-              <p class="time"><i class="far fa-clock"></i> 50 minutes</p>
-              <p class="schedule">
-                <i class="far fa-calendar"></i> Mon, Thu, Sat
-              </p>
-              <button class="book-btn">Book Now</button>
-            </div>
-          </div>
-
-          <!-- Yoga Card 2 -->
-          <div class="class-card yoga">
-            <div class="class-image yoga"></div>
-            <div class="class-info">
-              <h3>Gentle Yoga</h3>
-              <p class="trainer">Instructor: Sarah Johnson</p>
-              <p class="time"><i class="far fa-clock"></i> 45 minutes</p>
-              <p class="schedule"><i class="far fa-calendar"></i> Tue, Thu</p>
-              <button class="book-btn">Book Now</button>
-            </div>
-          </div>
-
-          <!-- HIIT Card 2 -->
-          <div class="class-card hiit">
-            <div class="class-image hiit"></div>
-            <div class="class-info">
-              <h3>HIIT Bootcamp</h3>
-              <p class="trainer">Instructor: John Smith</p>
-              <p class="time"><i class="far fa-clock"></i> 40 minutes</p>
-              <p class="schedule"><i class="far fa-calendar"></i> Mon, Fri</p>
-              <button class="book-btn">Book Now</button>
-            </div>
-          </div>
-
-          <!-- Pilates Card 2 -->
-          <div class="class-card pilates">
-            <div class="class-image pilates"></div>
-            <div class="class-info">
-              <h3>Pilates Reformer</h3>
-              <p class="trainer">Instructor: Emma Davis</p>
-              <p class="time"><i class="far fa-clock"></i> 60 minutes</p>
-              <p class="schedule"><i class="far fa-calendar"></i> Wed, Sat</p>
-              <button class="book-btn">Book Now</button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <script>
-      document
-        .getElementById("dateFilter")
-        .addEventListener("change", filterClasses);
-      document
-        .getElementById("classFilter")
-        .addEventListener("change", filterClasses);
-      document
-        .getElementById("trainerFilter")
-        .addEventListener("change", filterClasses);
-
-      function filterClasses() {
-        const dateFilter = document.getElementById("dateFilter").value;
-        const classFilter = document.getElementById("classFilter").value;
-        const trainerFilter = document.getElementById("trainerFilter").value;
-
-        const classes = document.querySelectorAll(".class-card");
-
-        classes.forEach((classCard) => {
-          let show = true;
-
-          if (classFilter && !classCard.classList.contains(classFilter)) {
-            show = false;
-          }
-
-          if (
-            trainerFilter &&
-            !classCard
-              .querySelector(".trainer")
-              .textContent.includes(trainerFilter)
-          ) {
-            show = false;
-          }
-
-          classCard.style.display = show ? "block" : "none";
-        });
-      }
-    </script>
+    <ul>
+      {% for fitness in fitness_programs %}
+      <li>{{ fitness.name }} - Trainer: {{ fitness.trainer.name }}</li>
+      {% empty %}
+      <li>No fitness programs available.</li>
+      {% endfor %}
+    </ul>
   </body>
 </html>
