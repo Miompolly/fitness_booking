@@ -1,66 +1,327 @@
-{% extends 'base.html' %} {% block title %}FitBook Dashboard{% endblock %} {%
-block dashboard_url %}#dashboard{% endblock %} {% block content %}
-<main class="dashboard-container">
-  <h1>Dashboard</h1>
+{% load static %}
 
-  <!-- Filters Section -->
-  <section id="schedule" class="schedule-section">
-    <h2>Class Schedule</h2>
-    <div class="filters">
-      <input type="date" id="dateFilter" />
-      <select id="classFilter">
-        <option value="">All Classes</option>
-        <option value="yoga">Yoga</option>
-        <option value="hiit">HIIT</option>
-        <option value="pilates">Pilates</option>
-      </select>
-      <select id="trainerFilter">
-        <option value="">All Trainers</option>
-        <option value="john">John Smith</option>
-        <option value="sarah">Sarah Johnson</option>
-      </select>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitBook Dashboard</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #4caf50;
+        --secondary-color: #2196f3;
+        --dark-color: #333;
+        --light-color: #f4f4f4;
+        --transition: all 0.3s ease;
+      }
 
-    <!-- Class Cards Grid -->
-    <div class="schedule-grid" id="scheduleGrid">
-      <!-- Yoga Card -->
-      <div class="class-card yoga">
-        <div class="class-image yoga"></div>
-        <div class="class-info">
-          <h3>Yoga Flow</h3>
-          <p class="trainer">Instructor: Sarah Johnson</p>
-          <p class="time"><i class="far fa-clock"></i> 60 minutes</p>
-          <p class="schedule"><i class="far fa-calendar"></i> Mon, Wed, Fri</p>
-          <button class="book-btn">Book Now</button>
-        </div>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        line-height: 1.6;
+        background-color: var(--light-color);
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--dark-color);
+        margin-left: 2rem;
+        transition: var(--transition);
+      }
+
+      .login-btn {
+        background: var(--primary-color);
+        color: white !important;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+      }
+
+      .hero {
+        height: 100vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+          url("https://source.unsplash.com/1600x900/?fitness") center/cover;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: white;
+        padding: 0 5%;
+      }
+
+      .hero-content h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .cta-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: var(--transition);
+        margin-top: 1rem;
+      }
+
+      .schedule-section {
+        padding: 5rem 5%;
+      }
+
+      .filters {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .filters input,
+      .filters select {
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .schedule-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+      }
+
+      .class-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: var(--transition);
+      }
+
+      .class-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1001;
+      }
+
+      .modal-content {
+        background: white;
+        width: 90%;
+        max-width: 500px;
+        margin: 10% auto;
+        padding: 2rem;
+        border-radius: 10px;
+        position: relative;
+      }
+
+      .close {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      form input {
+        width: 100%;
+        padding: 0.8rem;
+        margin: 0.5rem 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .hamburger {
+        display: none;
+        cursor: pointer;
+      }
+
+      .hamburger div {
+        width: 25px;
+        height: 3px;
+        background: var(--dark-color);
+        margin: 5px;
+        transition: var(--transition);
+      }
+
+      .loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        border: 5px solid var(--light-color);
+        border-top: 5px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .hero-content h1 {
+          font-size: 2rem;
+        }
+
+        .filters {
+          flex-direction: column;
+        }
+
+        .hamburger {
+          display: block;
+          z-index: 1002;
+        }
+
+        .nav-links {
+          position: fixed;
+          right: -100%;
+          top: 0;
+          height: 100vh;
+          width: 70%;
+          background: white;
+          flex-direction: column;
+          padding: 2rem;
+          transition: var(--transition);
+          display: flex !important;
+        }
+
+        .nav-links.active {
+          right: 0;
+        }
+
+        .nav-links a {
+          margin: 1rem 0;
+        }
+      }
+
+      .schedule-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .schedule-table th,
+      .schedule-table td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+
+      .schedule-table th {
+        background-color: #f4f4f4;
+      }
+
+      .book-btn {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+
+      .book-btn:hover {
+        background-color: #45a049;
+      }
+
+      h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .btn {
+        padding: 6px 12px;
+        font-size: 0.875rem;
+      }
+
+      .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .thead-dark th {
+        background-color: #343a40;
+        color: white;
+      }
+
+      /* Responsive Styling for Smaller Screens */
+      @media (max-width: 768px) {
+        .table {
+          font-size: 0.875rem;
+        }
+
+        .btn {
+          padding: 4px 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo">FitBook</div>
+      <div class="nav-links">
+        <a href="{% url 'trainer_list' %}">Trainer List</a>
+        <a href="{% url 'post_trainer' %}">Post Trainer</a>
+        <a href="{% url 'fitness_list' %}">Fitness Programs</a>
+        <a href="{% url 'add_fitness' %}">Add Fitness Program</a>
+        <a href="{% url 'login' %}">Logout</a>
       </div>
+    </nav>
 
-      <!-- HIIT Card -->
-      <div class="class-card hiit">
-        <div class="class-image hiit"></div>
-        <div class="class-info">
-          <h3>HIIT Training</h3>
-          <p class="trainer">Instructor: John Smith</p>
-          <p class="time"><i class="far fa-clock"></i> 45 minutes</p>
-          <p class="schedule"><i class="far fa-calendar"></i> Tue, Thu</p>
-          <button class="book-btn">Book Now</button>
-        </div>
-      </div>
+    <!-- Content Section -->
+    <main>{% block content %} {% endblock %}</main>
 
-      <!-- Pilates Card -->
-      <div class="class-card pilates">
-        <div class="class-image pilates"></div>
-        <div class="class-info">
-          <h3>Pilates Core</h3>
-          <p class="trainer">Instructor: Emma Davis</p>
-          <p class="time"><i class="far fa-clock"></i> 50 minutes</p>
-          <p class="schedule"><i class="far fa-calendar"></i> Mon, Thu, Sat</p>
-          <button class="book-btn">Book Now</button>
-        </div>
-      </div>
-
-      <!-- Additional Class Cards can go here -->
-    </div>
-  </section>
-</main>
-{% endblock %}
+    <script>
+      // Add custom JS scripts here if needed
+    </script>
+  </body>
+</html>

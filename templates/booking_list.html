@@ -1,0 +1,88 @@
+{% extends 'base_generic.html' %} {% block content %}
+<div
+  class="container"
+  style="
+    margin-top: 50px;
+    width: 100%;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  "
+>
+  <h1
+    class="text-center"
+    style="margin-bottom: 20px; color: #343a40; margin-left: 15%"
+  >
+    All Bookings
+  </h1>
+
+  <table
+    class="table table-striped"
+    style="border-radius: 8px; overflow: hidden; margin-left: 15%"
+  >
+    <thead>
+      <tr style="background-color: #007bff; color: white">
+        <th scope="col" style="padding: 10px">#</th>
+        <th scope="col" style="padding: 10px">Course Name</th>
+        <th scope="col" style="padding: 10px">Booking Date</th>
+        <th scope="col" style="padding: 10px">Time Slot</th>
+        <th scope="col" style="padding: 10px">Trainer</th>
+        <th scope="col" style="padding: 10px">User</th>
+        <th scope="col" style="padding: 10px">Status</th>
+        <th scope="col" style="padding: 10px">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in bookings %}
+      <tr style="background-color: #ffffff; border-bottom: 1px solid #dee2e6">
+        <th scope="row" style="padding: 10px">{{ forloop.counter }}</th>
+        <td style="padding: 10px">{{ booking.fitness_program.name }}</td>
+        <td style="padding: 10px">{{ booking.booking_date }}</td>
+        <td style="padding: 10px">{{ booking.time_slot }}</td>
+        <td style="padding: 10px">{{ booking.trainer.name }}</td>
+        <td style="padding: 10px">{{ booking.user.username }}</td>
+        <td style="padding: 10px">
+          <span
+            style="
+              padding: 5px 10px;
+              border-radius: 5px;
+              font-weight: bold;
+              {% if booking.status == 'Pending' %}
+                background-color: #ffc107; color: black;
+              {% elif booking.status == 'Confirmed' %}
+                background-color: #28a745; color: white;
+              {% else %}
+                background-color: #dc3545; color: white;
+              {% endif %}
+            "
+          >
+            {{ booking.status }}
+          </span>
+        </td>
+        <td style="padding: 10px">
+          <a
+            href="#"
+            class="btn"
+            style="
+              background-color: #17a2b8;
+              color: white;
+              border-radius: 5px;
+              padding: 5px 10px;
+              text-decoration: none;
+            "
+            >View</a
+          >
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8" class="text-center" style="padding: 20px">
+          No bookings available.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

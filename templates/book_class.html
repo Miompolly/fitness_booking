@@ -1,0 +1,174 @@
+{% extends 'base_generic.html' %} {% block content %}
+<div
+  class="container mt-5"
+  style="max-width: 600px; margin: 0 auto; padding-top: 70px"
+>
+  <!-- Page Header -->
+  <h1 class="text-center mb-4" style="color: #007bff">
+    {{ fitness_class.name }}
+  </h1>
+
+  <!-- Display messages -->
+  {% if messages %}
+  <div
+    class="alert alert-danger"
+    style="border-radius: 5px; background-color: #f8d7da; color: #721c24"
+  >
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Booking Form Card -->
+  <div
+    class="card shadow-lg"
+    style="border: 1px solid #ddd; border-radius: 10px"
+  >
+    <div
+      class="card-header"
+      style="
+        background-color: #007bff;
+        padding: 1rem 0 0 1rem;
+        color: white;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      "
+    >
+      <h2 class="card-title">Confirm Your Booking</h2>
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+
+        <!-- Class Name -->
+        <input
+          type="hidden"
+          name="trainer_id"
+          value="{{ fitness_class.trainer.id }}"
+        />
+        <div class="form-group">
+          <label for="id_field_name" style="font-weight: bold"
+            >Fitness Book Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="id_field_name"
+            value="{{ fitness_class.name }}"
+            disabled
+            style="background-color: #f8f9fa; border: 1px solid #ccc"
+          />
+        </div>
+
+        <!-- Trainer Name -->
+        <div class="form-group">
+          <label for="id_trainer" style="font-weight: bold">Trainer</label>
+          <input
+            type="text"
+            class="form-control"
+            id="id_trainer"
+            value="{{ fitness_class.trainer.name }}"
+            disabled
+            style="background-color: #f8f9fa; border: 1px solid #ccc"
+          />
+        </div>
+
+        <!-- Your Name -->
+        <div class="form-group">
+          <label for="id_name" style="font-weight: bold">Your Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="id_name"
+            name="name"
+            placeholder="Enter your full name"
+            required
+            style="background-color: #f8f9fa; border: 1px solid #ccc"
+          />
+        </div>
+
+        <!-- Your Email -->
+        <div class="form-group">
+          <label for="id_email" style="font-weight: bold">Your Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="id_email"
+            name="email"
+            placeholder="Enter your email address"
+            required
+            style="background-color: #f8f9fa; border: 1px solid #ccc"
+          />
+        </div>
+
+        <!-- Booking Date -->
+        <div class="form-group">
+          <label for="id_booking_date" style="font-weight: bold"
+            >Booking Date</label
+          >
+          <input
+            type="date"
+            class="form-control"
+            id="id_booking_date"
+            name="booking_date"
+            required
+            style="background-color: #f8f9fa; border: 1px solid #ccc"
+          />
+        </div>
+
+        <!-- Time Slot -->
+        <div class="form-group">
+          <label for="id_time_slot" style="font-weight: bold">Time Slot</label>
+          <input
+            type="time"
+            class="form-control"
+            id="id_time_slot"
+            name="time_slot"
+            required
+            style="background-color: #f8f9fa; border: 1px solid #ccc"
+          />
+        </div>
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button
+            type="submit"
+            class="btn btn-success btn-lg mt-3"
+            style="
+              background-color: #28a745;
+              border: none;
+              color: white;
+              padding: 10px 20px;
+              font-size: 16px;
+              border-radius: 5px;
+            "
+          >
+            Confirm Booking
+          </button>
+        </div>
+      </form>
+    </div>
+    <div
+      class="card-footer text-center"
+      style="
+        background-color: #f8f9fa;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      "
+    >
+      <a
+        href="{% url 'fitness_list' %}"
+        class="btn btn-secondary btn-sm"
+        style="
+          padding: 5px 15px;
+          border-radius: 5px;
+          background-color: #6c757d;
+          color: white;
+        "
+      >
+        Back to Class List
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

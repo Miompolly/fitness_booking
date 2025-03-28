@@ -1,0 +1,16 @@
+<h2>Your Bookings</h2>
+{% if bookings %}
+<ul>
+  {% for booking in bookings %}
+  <li>
+    {{ booking.fitness_program.name }} - {{ booking.booking_date }} at {{
+    booking.time_slot }} - Status: {{ booking.status }} {% if booking.status ==
+    'Pending' %}
+    <a href="{% url 'cancel_booking' booking.id %}">Cancel</a>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>You have no bookings.</p>
+{% endif %}

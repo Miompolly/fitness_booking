@@ -1,356 +1,192 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FitBook Dashboard</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      :root {
-        --primary-color: #4caf50;
-        --secondary-color: #2196f3;
-        --dark-color: #333;
-        --light-color: #f4f4f4;
-        --transition: all 0.3s ease;
-      }
+{% extends 'base.html' %} {% block content %}
+<main
+  class="dashboard-container"
+  style="
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  "
+>
+  <h1
+    style="
+      text-align: center;
+      font-size: 2rem;
+      color: #343a40;
+      margin-bottom: 20px;
+    "
+  >
+    Dashboard
+  </h1>
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Poppins", sans-serif;
-      }
-
-      body {
-        line-height: 1.6;
-        background-color: var(--light-color);
-      }
-
-      .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 5%;
-        background: white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 1000;
-      }
-
-      .logo {
+  <!-- Filters Section -->
+  <section id="schedule" class="schedule-section" style="margin-bottom: 30px">
+    <h2
+      style="
         font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-      }
-
-      .nav-links a {
-        text-decoration: none;
-        color: var(--dark-color);
-        margin-left: 2rem;
-        transition: var(--transition);
-      }
-
-      .login-btn {
-        background: var(--primary-color);
-        color: white !important;
-        padding: 0.5rem 1rem;
-        border-radius: 5px;
-      }
-
-      .hero {
-        height: 100vh;
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-          url("https://source.unsplash.com/1600x900/?fitness") center/cover;
-        display: flex;
-        align-items: center;
+        color: #007bff;
         text-align: center;
-        color: white;
-        padding: 0 5%;
-      }
+        margin-bottom: 20px;
+      "
+    >
+      Class Schedule
+    </h2>
 
-      .hero-content h1 {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-      }
+    <!-- Filter Controls -->
+    <div
+      style="display: flex; justify-content: space-between; margin-bottom: 20px"
+    >
+      <select
+        id="classFilter"
+        style="
+          padding: 10px;
+          font-size: 1rem;
+          border-radius: 5px;
+          border: 1px solid #ccc;
+        "
+      >
+        <option value="">Select Class</option>
+        <!-- Dynamically populate this with class options -->
+      </select>
 
-      .cta-btn {
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: var(--transition);
-        margin-top: 1rem;
-      }
+      <select
+        id="trainerFilter"
+        style="
+          padding: 10px;
+          font-size: 1rem;
+          border-radius: 5px;
+          border: 1px solid #ccc;
+        "
+      >
+        <option value="">Select Trainer</option>
+        <!-- Dynamically populate this with trainer options -->
+      </select>
 
-      .schedule-section {
-        padding: 5rem 5%;
-      }
+      <input
+        type="date"
+        id="dateFilter"
+        style="
+          padding: 10px;
+          font-size: 1rem;
+          border-radius: 5px;
+          border: 1px solid #ccc;
+        "
+      />
+    </div>
 
-      .filters {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 2rem;
-      }
-
-      .filters input,
-      .filters select {
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-      }
-
-      .schedule-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1rem;
-      }
-
-      .class-card {
-        background: white;
-        padding: 1rem;
-        border-radius: 10px;
+    <!-- Table to display class schedule -->
+    <table
+      id="scheduleTable"
+      class="schedule-table"
+      style="
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        transition: var(--transition);
+      "
+    >
+      <thead style="background-color: #007bff; color: white">
+        <tr>
+          <th style="padding: 12px; text-align: left; font-size: 1rem">
+            Course Name
+          </th>
+          <th style="padding: 12px; text-align: left; font-size: 1rem">
+            Instructor
+          </th>
+          <th style="padding: 12px; text-align: left; font-size: 1rem">
+            Duration (Weeks)
+          </th>
+          <th style="padding: 12px; text-align: left; font-size: 1rem">
+            Difficulty
+          </th>
+          <th style="padding: 12px; text-align: left; font-size: 1rem">
+            Description
+          </th>
+          <th style="padding: 12px; text-align: center; font-size: 1rem">
+            Action
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for program in fitness_programs %}
+        <tr style="border-bottom: 1px solid #ddd">
+          <td style="padding: 10px">{{ program.name }}</td>
+          <td style="padding: 10px">{{ program.trainer.name }}</td>
+          <td style="padding: 10px">{{ program.duration_weeks }} weeks</td>
+          <td style="padding: 10px">{{ program.difficulty_level }}</td>
+          <td style="padding: 10px">
+            {{ program.description|default:"No description available" }}
+          </td>
+          <td style="padding: 10px; text-align: center">
+            <a
+              href="{% url 'update_fitness' program.id %}"
+              class="btn btn-warning"
+              style="
+                padding: 8px 12px;
+                background-color: #ffc107;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+              "
+              >Update</a
+            >
+            <a
+              href="{% url 'delete_fitness' program.id %}"
+              class="btn btn-danger"
+              style="
+                padding: 8px 12px;
+                background-color: #dc3545;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+              "
+              onclick="return confirm('Are you sure you want to delete this program?');"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</main>
+{% endblock %} {% block scripts %}
+<script>
+  document
+    .getElementById("dateFilter")
+    .addEventListener("change", filterClasses);
+  document
+    .getElementById("classFilter")
+    .addEventListener("change", filterClasses);
+  document
+    .getElementById("trainerFilter")
+    .addEventListener("change", filterClasses);
+
+  function filterClasses() {
+    const dateFilter = document.getElementById("dateFilter").value;
+    const classFilter = document.getElementById("classFilter").value;
+    const trainerFilter = document.getElementById("trainerFilter").value;
+
+    const rows = document.querySelectorAll("#scheduleTable tbody tr");
+
+    rows.forEach((row) => {
+      let show = true;
+
+      if (classFilter && !row.classList.contains(classFilter)) {
+        show = false;
       }
 
-      .class-card:hover {
-        transform: translateY(-5px);
+      if (
+        trainerFilter &&
+        !row
+          .querySelector("td:nth-child(2)")
+          .textContent.includes(trainerFilter)
+      ) {
+        show = false;
       }
 
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1001;
-      }
-
-      .modal-content {
-        background: white;
-        width: 90%;
-        max-width: 500px;
-        margin: 10% auto;
-        padding: 2rem;
-        border-radius: 10px;
-        position: relative;
-      }
-
-      .close {
-        position: absolute;
-        right: 1rem;
-        top: 1rem;
-        font-size: 1.5rem;
-        cursor: pointer;
-      }
-
-      form input {
-        width: 100%;
-        padding: 0.8rem;
-        margin: 0.5rem 0;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-      }
-
-      .hamburger {
-        display: none;
-        cursor: pointer;
-      }
-
-      .hamburger div {
-        width: 25px;
-        height: 3px;
-        background: var(--dark-color);
-        margin: 5px;
-        transition: var(--transition);
-      }
-
-      .loading {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 50px;
-        height: 50px;
-        border: 5px solid var(--light-color);
-        border-top: 5px solid var(--primary-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: translate(-50%, -50%) rotate(0deg);
-        }
-        100% {
-          transform: translate(-50%, -50%) rotate(360deg);
-        }
-      }
-
-      @media (max-width: 768px) {
-        .nav-links {
-          display: none;
-        }
-
-        .hero-content h1 {
-          font-size: 2rem;
-        }
-
-        .filters {
-          flex-direction: column;
-        }
-
-        .hamburger {
-          display: block;
-          z-index: 1002;
-        }
-
-        .nav-links {
-          position: fixed;
-          right: -100%;
-          top: 0;
-          height: 100vh;
-          width: 70%;
-          background: white;
-          flex-direction: column;
-          padding: 2rem;
-          transition: var(--transition);
-          display: flex !important;
-        }
-
-        .nav-links.active {
-          right: 0;
-        }
-
-        .nav-links a {
-          margin: 1rem 0;
-        }
-      }
-
-      /* Dashboard Styles */
-      .dashboard-container {
-        padding: 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .class-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-top: 2rem;
-      }
-
-      .class-card {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        transition: transform 0.3s ease;
-      }
-
-      .class-card:hover {
-        transform: translateY(-5px);
-      }
-
-      .class-image {
-        height: 200px;
-        background-size: cover;
-        background-position: center;
-      }
-
-      .class-image.yoga {
-        background-image: url("images/yoga.jpg");
-      }
-
-      .class-image.hiit {
-        background-image: url("images/hiit.jpg");
-      }
-
-      .class-image.pilates {
-        background-image: url("images/pilates.jpg");
-      }
-
-      .class-info {
-        padding: 1.5rem;
-      }
-
-      .class-info h3 {
-        margin: 0 0 1rem;
-        color: #333;
-      }
-
-      .class-info p {
-        margin: 0.5rem 0;
-        color: #666;
-      }
-
-      .class-info i {
-        margin-right: 0.5rem;
-      }
-
-      .book-btn {
-        width: 100%;
-        padding: 0.8rem;
-        margin-top: 1rem;
-        background: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-      }
-
-      .book-btn:hover {
-        background: #45a049;
-      }
-
-      .difficulty {
-        display: inline-block;
-        padding: 0.3rem 0.8rem;
-        background: #f0f0f0;
-        border-radius: 15px;
-        font-size: 0.9rem;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="logo">FitBook</div>
-      <div class="nav-links">
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'trainer_list' %}">Trainer List</a>
-        <a href="{% url 'post_trainer' %}">Post Trainer</a>
-        <a href="{% url 'fitness_list' %}">Fitness Programs</a>
-        <a href="{% url 'add_fitness' %}">Add Fitness Program</a>
-        <a href="{% url 'logout' %}">Logout</a>
-      </div>
-    </nav>
-    <!-- Start block -->
-    <h1>Fitness Programs</h1>
-
-    <ul>
-      {% for fitness in fitness_programs %}
-      <li>{{ fitness.name }} - Trainer: {{ fitness.trainer.name }}</li>
-      {% empty %}
-      <li>No fitness programs available.</li>
-      {% endfor %}
-    </ul>
-  </body>
-</html>
+      row.style.display = show ? "table-row" : "none";
+    });
+  }
+</script>
+{% endblock %}

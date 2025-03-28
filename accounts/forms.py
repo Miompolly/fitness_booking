@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import CustomUser  # Import CustomUser model
+from .models import Booking, CustomUser  # Import CustomUser model
 
 
 from django import forms
@@ -57,3 +57,10 @@ class FitnessForm(forms.ModelForm):
         }
 
 
+class BookingForm(forms.ModelForm):
+    name = forms.CharField(max_length=255, required=True)
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = Booking
+        fields = ['fitness_program', 'booking_date', 'time_slot', 'name', 'email']  
