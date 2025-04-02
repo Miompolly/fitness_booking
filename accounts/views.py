@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.mail import send_mail
+from django.conf import settings
+from .models import Fitness, Booking
 
 from accounts.models import Trainer
 from .forms import CustomUserCreationForm, CustomUserLoginForm
@@ -244,22 +248,34 @@ from django.contrib import messages
 
 
 from django.contrib.auth.decorators import login_required
-@login_required  # Ensures only logged-in users can book
+@login_required  
 def book_class(request, class_id):
     fitness_class = get_object_or_404(Fitness, id=class_id)
 
     if request.method == "POST":
+        email = request.POST.get("email")
+        name = request.POST.get("name")
+
         booking = Booking(
             fitness_program=fitness_class,
             booking_date=request.POST.get("booking_date"),
             time_slot=request.POST.get("time_slot"),
             trainer=fitness_class.trainer, 
             user=request.user,  
-            email=request.POST.get("email"),
-            name=request.POST.get("name"),
+            email=email,
+            name=name,
             status="Pending",
         )
         booking.save()  # Save to DB
+
+        # Send confirmation email
+        subject = "Class Booking Confirmation"
+        message = f"Dear {name},\n\nYou have successfully booked a class : {fitness_class.name}.\nDate: {booking.booking_date}\nTime: {booking.time_slot}\nTrainer: {fitness_class.trainer}\n\nThank you for booking with us!,\n\n Wait for approval.\n\nBest regards,\nFitness Booking Team"
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [email]
+
+        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
         return redirect("booking_list")  
 
     return render(request, "book_class.html", {"fitness_class": fitness_class})
